@@ -11,6 +11,7 @@ pub mod combinators;
 #[derive(Debug, PartialEq)]
 pub enum ParsedObject {
     Char(char),
+    String(String),
 }
 
 /// Combinators returns this if it fails.
@@ -22,7 +23,7 @@ pub enum ParseError {
     NotEnoughInput(String, usize),
 }
 
-impl fmt::Display for ParseError {
+impl<'a> fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             ParseError::Unexpected(expected, got, location) => {

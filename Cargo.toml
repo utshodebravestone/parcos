@@ -4,7 +4,7 @@ description = "parser combinator library"
 version = "0.0.1"
 edition = "2021"
 authors = ["utshodebravestone <utshodebravestone@gmail.com>"]
-licence = "MIT"
+licence_file = "LICENCE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

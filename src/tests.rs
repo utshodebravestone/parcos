@@ -60,6 +60,22 @@ mod tests {
     }
 
     #[test]
+    fn parse_digit() {
+        assert_eq!(Ok(("6", "2".into())), digit("26"));
+        assert_eq!(Ok(("6s", "2".into())), digit("26s"));
+        assert!(digit(".26").is_err());
+        assert!(digit("").is_err());
+    }
+
+    #[test]
+    fn parse_digits() {
+        assert_eq!(Ok(("", "26".into())), digits("26"));
+        assert_eq!(Ok(("s", "26".into())), digits("26s"));
+        assert!(digits(".26").is_err());
+        assert!(digits("").is_err());
+    }
+
+    #[test]
     fn parse_identifier() {
         assert_eq!(Ok((" bar", "foo".into())), identifier("foo bar"));
         assert_eq!(Ok(("", "foobar".into())), identifier("foobar"));

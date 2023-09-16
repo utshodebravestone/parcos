@@ -146,8 +146,68 @@ pub fn whitespaces(input: &str) -> Result<(&str, &str), String> {
     parse_whitespaces(input)
 }
 
-/// # whitespaces
-/// Parses identifier that starts with an _ or [a-zA-Z] and contains [0-9]*. Useful when trying to get rid of extra spaces.
+/// # digit
+/// Parses a single that is [0-9]. This can be useful when you want to parse exactly one single digit.
+///
+/// ## Example
+///
+/// ```
+/// use parcos::*;
+///
+/// fn parse_digit() {
+///     assert_eq!(Ok(("6", "2".into())), digit("26"));
+///     assert_eq!(Ok(("6s", "2".into())), digit("26s"));
+///     assert!(digit(".26").is_err());
+///     assert!(digit("").is_err());
+/// }
+/// ```
+pub fn digit(input: &str) -> Result<(&str, &str), String> {
+    let mut chars = input.chars();
+
+    match chars.next() {
+        Some(it) if it.is_numeric() => Ok((&input[1..], &input[..1])),
+        _ => return Err("expected `DIGIT`".into()),
+    }
+}
+
+/// # digits
+/// Parses identifier that is [0-9]+. Useful when trying to parse a number.
+///
+/// ## Example
+///
+/// ```
+/// use parcos::*;
+///
+/// #[test]
+/// fn parse_digits() {
+///     assert_eq!(Ok(("", "26".into())), digits("26"));
+///     assert_eq!(Ok(("s", "26".into())), digits("26s"));
+///     assert!(identifier(".26").is_err());
+///     assert!(identifier("").is_err());
+/// }
+/// ```
+pub fn digits(input: &str) -> Result<(&str, &str), String> {
+    let mut matched_till = 0;
+    let mut chars = input.chars();
+
+    match chars.next() {
+        Some(it) if it.is_numeric() => matched_till += 1,
+        _ => return Err("expected `DIGIT`".into()),
+    }
+
+    while let Some(it) = chars.next() {
+        if it.is_numeric() {
+            matched_till += 1;
+        } else {
+            break;
+        }
+    }
+
+    Ok((&input[matched_till..], &input[..matched_till]))
+}
+
+/// # identifier
+/// Parses identifier that starts with an _ or [a-zA-Z] and contains [0-9]*. Useful when trying to parse.. well, identifiers.
 ///
 /// ## Example
 ///

@@ -1,6 +1,6 @@
 [package]
 name = "parcos"
-description = "parser combinator library"
+description = "minimal parser combinator library"
 version = "0.0.3"
 edition = "2021"
 license = "MIT"

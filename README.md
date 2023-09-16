@@ -4,7 +4,7 @@ Minimal Parser Combinator Library
 
 ## Docs
 
-You can read the docs [here](https://docs.rs/parcos/0.0.2/parcos/).
+You can read the docs [here](https://docs.rs/parcos/0.0.3/parcos/index.html).
 
 ## Usage
 

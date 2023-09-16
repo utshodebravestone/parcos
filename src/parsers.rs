@@ -20,6 +20,18 @@ pub fn any_of(
     }
 }
 
+pub fn zero_or_more(
+    parser: impl Fn(&str) -> Result<(&str, &str), String>,
+) -> impl Fn(&str) -> Result<(&str, &str), String> {
+    move |input| {
+        let mut consumed_till = 0;
+        while let Ok(ok) = parser(&input[consumed_till..]) {
+            consumed_till += ok.1.len();
+        }
+        Ok((&input[consumed_till..], &input[..consumed_till]))
+    }
+}
+
 pub fn whitespace(input: &str) -> Result<(&str, &str), String> {
     let parse_whitespace = exact(" ");
     let parse_tab = exact("\t");
@@ -27,6 +39,11 @@ pub fn whitespace(input: &str) -> Result<(&str, &str), String> {
     let parse_any_whitespace = any_of(vec![parse_whitespace, parse_tab, parse_new_line]);
 
     parse_any_whitespace(input)
+}
+
+pub fn whitespaces(input: &str) -> Result<(&str, &str), String> {
+    let parse_whitespaces = zero_or_more(whitespace);
+    parse_whitespaces(input)
 }
 
 pub fn identifier(input: &str) -> Result<(&str, &str), String> {
@@ -86,6 +103,16 @@ mod tests {
         assert_eq!(Ok((" \n", "\t")), whitespace("\t \n"));
         assert!(whitespace("foo bar").is_err());
         assert!(whitespace("").is_err());
+    }
+
+    #[test]
+    fn parse_whitespaces() {
+        assert_eq!(Ok(("", " ")), whitespaces(" "));
+        assert_eq!(Ok(("", "\t")), whitespaces("\t"));
+        assert_eq!(Ok(("", "\n")), whitespaces("\n"));
+        assert_eq!(Ok(("", "\t \n")), whitespaces("\t \n"));
+        assert_eq!(Ok(("foo bar", "")), whitespaces("foo bar"));
+        assert_eq!(Ok(("", "")), whitespaces(""));
     }
 
     #[test]

@@ -20,7 +20,11 @@ impl<Input: Clone + PartialEq> Parser<Input, Input> for Just<Input> {
                 let x = x.cloned();
                 (
                     0,
-                    Err(Error::Unexpected(stream.position(), self.0.clone(), x)),
+                    Err(Error::Unexpected(
+                        stream.position(),
+                        vec![self.0.clone()],
+                        x,
+                    )),
                 )
             }
         }

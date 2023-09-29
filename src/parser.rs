@@ -1,5 +1,5 @@
 use crate::{
-    combinators::{to, To},
+    combinators::{or, to, Or, To},
     error::Error,
     stream::{Stream, Streamable},
 };
@@ -24,9 +24,9 @@ pub trait Parser<I, O> {
     {
         let mut errors = vec![];
         match self.parse_impl(&mut Stream::new(iter), &mut errors).1 {
-            Ok(output) => (Some(output), errors),
-            Err(error) => {
-                errors.push(error);
+            Ok(o) => (Some(o), errors),
+            Err(e) => {
+                errors.push(e);
                 (None, errors)
             }
         }
@@ -51,15 +51,34 @@ pub trait Parser<I, O> {
     /// use parcos::{parser::Parser, combinators::just};
     ///
     /// let slash_parser = just('/').to("Slash");
-    ///let parsed = slash_parser.parse("/foo".chars());
+    /// let parsed = slash_parser.parse("/foo".chars());
     ///
-    ///assert!(parsed.is_ok());
-    ///assert_eq!(parsed.unwrap(), "Slash");
+    /// assert!(parsed.is_ok());
+    /// assert_eq!(parsed.unwrap(), "Slash");
     /// ```
     fn to<N: Clone>(self, x: N) -> To<Self, N, O>
     where
         Self: Sized,
     {
         to(self, x)
+    }
+
+    /// For choosing between two parser (P1 and P2)
+    /// ```
+    /// use parcos::{parser::Parser, combinators::just};
+    ///
+    /// let bang_parser = just('!').to("Bang");
+    /// let slash_parser = just('/').to("Slash");
+    /// let bang_or_slash_parser = bang_parser.or(slash_parser);
+    /// let parsed = bang_or_slash_parser.parse("/".chars());
+    ///
+    /// assert!(parsed.is_ok());
+    /// assert_eq!(parsed.unwrap(), "Slash");
+    /// ```
+    fn or<P: Parser<I, O>>(self, other: P) -> Or<Self, P>
+    where
+        Self: Sized,
+    {
+        or(self, other)
     }
 }

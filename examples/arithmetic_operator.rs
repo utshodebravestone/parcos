@@ -15,9 +15,11 @@ fn main() {
         .or(just("*").to(Operator::Star))
         .or(just("/").to(Operator::Slash));
 
-    println!("{:#?}", parser.parse("+".split(" ")));
-    println!("{:#?}", parser.parse("-".split(" ")));
-    println!("{:#?}", parser.parse("*".split(" ")));
-    println!("{:#?}", parser.parse("/".split(" ")));
-    println!("{:#?}", parser.parse("wat".split(" ")));
+    let mut src = "+ - * / wat".split(" ");
+
+    println!("{:#?}", parser.parse(&mut src));
+    println!("{:#?}", parser.parse(&mut src));
+    println!("{:#?}", parser.parse(&mut src));
+    println!("{:#?}", parser.parse(&mut src));
+    println!("{:#?}", parser.parse(&mut src));
 }

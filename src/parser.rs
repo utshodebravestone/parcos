@@ -39,7 +39,6 @@ pub trait Parser<I, O> {
     {
         let (output, errors) = self.parse_or_recover(iter);
         if errors.is_empty() {
-            // output should be some variant since we're accessing it only if errors is empty
             Ok(output.unwrap())
         } else {
             Err(errors)

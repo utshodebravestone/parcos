@@ -1,7 +1,7 @@
 use std::iter::Peekable;
 
 /// # Parcos Input Streams
-/// Types that implements this trait can be used as input for parser.
+/// For making a type passable as input to Parsers.
 pub trait Streamable<I> {
     fn peek(&mut self) -> Option<&I>;
 
@@ -10,8 +10,8 @@ pub trait Streamable<I> {
     fn position(&self) -> usize;
 }
 
-/// This makes an iterator parser input (Streamable).
-pub struct Stream<Iter: Iterator>(Peekable<Iter>, usize);
+/// For making an Iterator Streamable.
+pub(crate) struct Stream<Iter: Iterator>(Peekable<Iter>, usize);
 
 impl<Iter: Iterator> Stream<Iter> {
     pub fn new(iter: Iter) -> Self {

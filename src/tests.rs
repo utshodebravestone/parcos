@@ -22,3 +22,18 @@ fn test_just_parser_failure() {
 
     assert!(parsed.is_err());
 }
+
+#[test]
+fn test_to_parser() {
+    let foo_parser = just("foo").to("bar");
+    let parsed = foo_parser.parse(vec!["foo"].into_iter());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), "bar");
+
+    let slash_parser = just('/').to("Slash");
+    let parsed = slash_parser.parse("/foo".chars());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), "Slash");
+}

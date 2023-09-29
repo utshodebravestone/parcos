@@ -7,6 +7,12 @@ fn test_just_parser() {
 
     assert!(parsed.is_ok());
     assert_eq!(parsed.unwrap(), "foo");
+
+    let slash_parser = just('/');
+    let parsed = slash_parser.parse("/foo".chars());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), '/');
 }
 
 #[test]

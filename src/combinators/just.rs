@@ -28,6 +28,15 @@ impl<Input: Clone + PartialEq> Parser<Input, Input> for Just<Input> {
 }
 
 /// Combinator for parsing specific things like operator, keyword etc.
+/// ```
+/// use parcos::{parser::Parser, combinators::just};
+///
+/// let slash_parser = just('/');
+/// let parsed = slash_parser.parse("/foo".chars());
+///
+/// assert!(parsed.is_ok());
+/// assert_eq!(parsed.unwrap(), '/');
+/// ```
 pub fn just<I: Clone + PartialEq>(x: I) -> Just<I> {
     Just(x)
 }

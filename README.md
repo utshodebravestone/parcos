@@ -1,6 +1,6 @@
 # Parcos
 
-Minimal Parser Combinator Library
+Simple, Minimal Parser Combinator Library.
 
 ## Docs
 

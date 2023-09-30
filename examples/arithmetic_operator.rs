@@ -1,7 +1,12 @@
-use parcos::{combinators::just, parser::Parser};
+use parcos::{
+    combinators::{just, pred},
+    error::Error,
+    parser::Parser,
+};
 
 #[derive(Debug, Clone)]
 enum Operator {
+    Number,
     Plus,
     Minus,
     Star,
@@ -9,17 +14,28 @@ enum Operator {
 }
 
 fn main() {
-    let parser = just("+")
-        .to(Operator::Plus)
-        .or(just("-").to(Operator::Minus))
-        .or(just("*").to(Operator::Star))
-        .or(just("/").to(Operator::Slash));
+    let parser = pred(|x: &char| x.is_ascii_digit())
+        .to(Operator::Number)
+        .or(just('+').to(Operator::Plus))
+        .or(just('-').to(Operator::Minus))
+        .or(just('*').to(Operator::Star))
+        .or(just('/').to(Operator::Slash));
 
-    let mut src = "+ - * / wat".split(" ");
+    let mut src = "1+2*3/4".chars();
 
-    println!("{:#?}", parser.parse(&mut src));
-    println!("{:#?}", parser.parse(&mut src));
-    println!("{:#?}", parser.parse(&mut src));
-    println!("{:#?}", parser.parse(&mut src));
-    println!("{:#?}", parser.parse(&mut src));
+    loop {
+        match parser.parse(&mut src) {
+            Ok(o) => println!("{o:?}"),
+            Err(es) => {
+                for e in es {
+                    match e {
+                        Error::Unexpected(p, e, f) => {
+                            eprintln!("unexpected token. expected: {e:?}, found: {f:?} in {p}");
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
 }

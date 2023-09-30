@@ -2,7 +2,6 @@ use crate::{error::Error, parser::Parser, stream::Streamable};
 
 /// # Just
 /// For parsing specific things (like operator, keyword etcetera).
-#[derive(Debug)]
 pub struct Just<Input>(Input);
 
 impl<Input: Clone + PartialEq> Parser<Input, Input> for Just<Input> {

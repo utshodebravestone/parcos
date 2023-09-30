@@ -1,4 +1,7 @@
-use crate::{combinators::just, parser::Parser};
+use crate::{
+    combinators::{just, pred},
+    parser::Parser,
+};
 
 #[test]
 fn test_just_parser() {
@@ -56,4 +59,19 @@ fn test_or_parser() {
 
     assert!(parsed.is_ok());
     assert_eq!(parsed.unwrap(), "Slash");
+}
+
+#[test]
+fn test_pred_parser() {
+    let digit_parser = pred(|x: &char| x.is_ascii_digit());
+    let parsed = digit_parser.parse("10x".chars());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), '1');
+
+    let email_parser = pred(|x: &&str| x.contains("@"));
+    let parsed = email_parser.parse(vec!["foo@bar"].into_iter());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), "foo@bar");
 }

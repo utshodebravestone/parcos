@@ -1,5 +1,3 @@
-use std::borrow::BorrowMut;
-
 use parcos::{
     combinators::{just, pred},
     parser::Parser,
@@ -20,11 +18,11 @@ fn main() {
         .or(just('+').to(Node::Plus))
         .or(just('-').to(Node::Minus))
         .or(just('*').to(Node::Star))
-        .or(just('/').to(Node::Slash));
+        .or(just('/').to(Node::Slash))
+        .repeat();
 
-    let mut src = "1+2*3/4".chars();
+    let mut src = "1+2*3/4*5+6-7".chars();
 
-    while let Ok(n) = parser.parse(src.borrow_mut()) {
-        println!("{n:#?}");
-    }
+    let n = parser.parse(&mut src);
+    println!("{n:#?}");
 }

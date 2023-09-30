@@ -9,6 +9,3 @@ authors = ["Utsho de Bravestone <utshodebravestone@gmail.com>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-[[examples]]
-name = "arithmetic_operator"

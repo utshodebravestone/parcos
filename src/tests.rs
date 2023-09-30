@@ -75,3 +75,12 @@ fn test_pred_parser() {
     assert!(parsed.is_ok());
     assert_eq!(parsed.unwrap(), "foo@bar");
 }
+
+#[test]
+fn test_map_parser() {
+    let digit_parser = pred(|x: &char| x.is_digit(10)).map(|o| o.to_digit(10).unwrap());
+    let parsed = digit_parser.parse("10x".chars());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), 1);
+}

@@ -1,8 +1,7 @@
 use crate::{error::Error, parser::Parser, stream::Streamable};
 
 /// # Pred
-/// For parsing with an predicate
-/// Parses if the predicate returns true
+/// For parsing with an predicate (P).
 pub struct Pred<F>(F);
 
 impl<I: Clone, F: Fn(&I) -> bool> Parser<I, I> for Pred<F> {
@@ -15,16 +14,16 @@ impl<I: Clone, F: Fn(&I) -> bool> Parser<I, I> for Pred<F> {
         Self: Sized,
     {
         match stream.peek() {
-            Some(x) if (self.0)(x) => (1, Ok(stream.next().unwrap())),
-            x => {
-                let x = x.cloned();
-                (0, Err(Error::Unexpected(stream.position(), vec![], x)))
+            Some(i) if (self.0)(i) => (1, Ok(stream.next().unwrap())),
+            i => {
+                let i = i.cloned();
+                (0, Err(Error::Unexpected(stream.position(), vec![], i)))
             }
         }
     }
 }
 
-/// For constructing Pred
+/// For constructing Pred.
 /// ```
 /// use parcos::{parser::Parser, combinators::pred};
 ///

@@ -3,13 +3,8 @@ use std::marker::PhantomData;
 use crate::{error::Error, parser::Parser, stream::Streamable};
 
 /// # To
-/// For converting output type (O to N).
+/// For converting output type (O -> N).
 pub struct To<P, N, O>(P, N, PhantomData<O>);
-
-/// For constructing To.
-pub fn to<P, N, O>(parser: P, new_output: N) -> To<P, N, O> {
-    To(parser, new_output, PhantomData)
-}
 
 impl<I, O, P: Parser<I, O>, N: Clone> Parser<I, N> for To<P, N, O> {
     fn parse_impl<S: Streamable<I>>(
@@ -20,7 +15,12 @@ impl<I, O, P: Parser<I, O>, N: Clone> Parser<I, N> for To<P, N, O> {
     where
         Self: Sized,
     {
-        let (n, res) = self.0.parse_impl(stream, errors);
-        (n, res.map(|_| self.1.clone()))
+        let (p, res) = self.0.parse_impl(stream, errors);
+        (p, res.map(|_| self.1.clone()))
     }
+}
+
+/// For constructing To.
+pub fn to<P, N, O>(parser: P, new_output: N) -> To<P, N, O> {
+    To(parser, new_output, PhantomData)
 }

@@ -3,16 +3,19 @@
 #[derive(Debug)]
 pub enum Error<I> {
     /// Occurs when expected something but got something else.
+    /// (Position, Expected, Got).
     Unexpected(usize, Vec<I>, Option<I>),
 }
 
 impl<I> Error<I> {
+    /// For getting error's position.
     fn position(&self) -> usize {
         match self {
             Error::Unexpected(p, _, _) => *p,
         }
     }
 
+    /// For merging (adding) two error.
     pub fn merge(self, other: Self) -> Self {
         if self.position() > other.position() {
             self

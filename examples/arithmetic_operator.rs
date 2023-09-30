@@ -1,12 +1,13 @@
+use std::borrow::BorrowMut;
+
 use parcos::{
     combinators::{just, pred},
-    error::Error,
     parser::Parser,
 };
 
 #[derive(Debug, Clone)]
-enum Operator {
-    Number,
+enum Node {
+    Number(u32),
     Plus,
     Minus,
     Star,
@@ -14,28 +15,16 @@ enum Operator {
 }
 
 fn main() {
-    let parser = pred(|x: &char| x.is_ascii_digit())
-        .to(Operator::Number)
-        .or(just('+').to(Operator::Plus))
-        .or(just('-').to(Operator::Minus))
-        .or(just('*').to(Operator::Star))
-        .or(just('/').to(Operator::Slash));
+    let parser = pred(|x: &char| x.is_digit(10))
+        .map(|o| Node::Number(o.to_digit(10).unwrap()))
+        .or(just('+').to(Node::Plus))
+        .or(just('-').to(Node::Minus))
+        .or(just('*').to(Node::Star))
+        .or(just('/').to(Node::Slash));
 
     let mut src = "1+2*3/4".chars();
 
-    loop {
-        match parser.parse(&mut src) {
-            Ok(o) => println!("{o:?}"),
-            Err(es) => {
-                for e in es {
-                    match e {
-                        Error::Unexpected(p, e, f) => {
-                            eprintln!("unexpected token. expected: {e:?}, found: {f:?} in {p}");
-                        }
-                    }
-                }
-                break;
-            }
-        }
+    while let Ok(n) = parser.parse(src.borrow_mut()) {
+        println!("{n:#?}");
     }
 }

@@ -1,5 +1,5 @@
 use crate::{
-    combinators::{map, or, to, Map, Or, To},
+    combinators::{map, or, repeat, to, Map, Or, Repeat, To},
     error::Error,
     stream::{Stream, Streamable},
 };
@@ -96,5 +96,24 @@ pub trait Parser<I, O> {
         Self: Sized,
     {
         map(self, f)
+    }
+
+    /// For repeating a parser (P).
+    /// ```
+    /// use parcos::{parser::Parser, combinators::pred};
+    ///
+    ///  let number_parser = pred(|x: &char| x.is_digit(10))
+    ///     .map(|o| o.to_digit(10).unwrap())
+    ///     .repeat();
+    /// let parsed = number_parser.parse("10x".chars());
+    ///
+    /// assert!(parsed.is_ok());
+    /// assert_eq!(parsed.unwrap(), vec![1, 0]);
+    /// ```
+    fn repeat(self) -> Repeat<Self>
+    where
+        Self: Sized,
+    {
+        repeat(self)
     }
 }

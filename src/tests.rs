@@ -84,3 +84,14 @@ fn test_map_parser() {
     assert!(parsed.is_ok());
     assert_eq!(parsed.unwrap(), 1);
 }
+
+#[test]
+fn test_repeat_parser() {
+    let number_parser = pred(|x: &char| x.is_digit(10))
+        .map(|o| o.to_digit(10).unwrap())
+        .repeat();
+    let parsed = number_parser.parse("10x".chars());
+
+    assert!(parsed.is_ok());
+    assert_eq!(parsed.unwrap(), vec![1, 0]);
+}

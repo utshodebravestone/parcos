@@ -12,4 +12,4 @@ This crate is available on [crate.io](https://crates.io/crates/parcos). To add p
 
 ## Examples
 
-Examples can be found [here](tree/main/examples).
+Examples can be found [here](/examples).
